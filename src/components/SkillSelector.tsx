@@ -16,11 +16,12 @@ export default function SkillSelector({
   attributes,
 }: Props) {
   const addSkill = () => {
+    const firstSkill = skillDefinitions[0]; // default to first skill
     setSkills([
       ...skills,
       {
-        name: "",
-        linkedAttribute: "Smarts",
+        name: firstSkill.name,
+        linkedAttribute: firstSkill.linkedAttribute as keyof Attributes, // ensure type matches
         die: "d4",
       },
     ]);
