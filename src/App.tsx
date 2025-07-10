@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AttributeSelector from "./components/AttributeSelector";
 import { Attributes, Character } from "./types/character";
+import SkillSelector from "./components/SkillSelector";
 
 const defaultAttributes: Attributes = {
   Agility: "d4",
@@ -14,6 +15,7 @@ function App() {
   const [character, setCharacter] = useState<Character>({
     name: "",
     attributes: defaultAttributes,
+    skills: [],
   });
 
   return (
@@ -34,6 +36,12 @@ function App() {
         setAttributes={(updatedAttrs) =>
           setCharacter({ ...character, attributes: updatedAttrs })
         }
+      />
+
+      <SkillSelector
+        skills={character.skills}
+        setSkills={(updated) => setCharacter({ ...character, skills: updated })}
+        attributes={character.attributes}
       />
 
       <pre style={{ marginTop: "2rem", background: "#eee", padding: "1rem" }}>

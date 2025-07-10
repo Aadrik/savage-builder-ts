@@ -8,7 +8,14 @@ export interface Attributes {
   Vigor: DieType;
 }
 
+export interface Skill {
+  name: string;
+  linkedAttribute: keyof Attributes;
+  die: DieType;
+}
+
 export interface Character {
   name: string;
   attributes: Attributes;
+  skills: Skill[];
 }
