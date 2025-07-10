@@ -1,11 +1,11 @@
 export type DieType = "d4" | "d6" | "d8" | "d10" | "d12";
 
 export interface Attributes {
-  Agility: number;
-  Smarts: number;
-  Spirit: number;
-  Strength: number;
-  Vigor: number;
+  Agility: DieType;
+  Smarts: DieType;
+  Spirit: DieType;
+  Strength: DieType;
+  Vigor: DieType;
 }
 
 export interface Character {
