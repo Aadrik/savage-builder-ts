@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import AttributeSelector from "./components/AttributeSelector";
+import CharacterForm from "./components/CharacterForm";
+//import AttributeSelector from "./components/AttributeSelector";
 import { Attributes, Character } from "./types/character";
-import SkillSelector from "./components/SkillSelector";
+//import SkillSelector from "./components/SkillSelector";
 
 const defaultAttributes: Attributes = {
   Agility: "d4",
@@ -22,27 +23,7 @@ function App() {
     <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h1>Savage Worlds Character Builder</h1>
 
-      <div style={{ marginBottom: "1rem" }}>
-        <label>Name: </label>
-        <input
-          type="text"
-          value={character.name}
-          onChange={(e) => setCharacter({ ...character, name: e.target.value })}
-        />
-      </div>
-
-      <AttributeSelector
-        attributes={character.attributes}
-        setAttributes={(updatedAttrs) =>
-          setCharacter({ ...character, attributes: updatedAttrs })
-        }
-      />
-
-      <SkillSelector
-        skills={character.skills}
-        setSkills={(updated) => setCharacter({ ...character, skills: updated })}
-        attributes={character.attributes}
-      />
+      <CharacterForm character={character} setCharacter={setCharacter} />
 
       <pre style={{ marginTop: "2rem", background: "#eee", padding: "1rem" }}>
         {JSON.stringify(character, null, 2)}

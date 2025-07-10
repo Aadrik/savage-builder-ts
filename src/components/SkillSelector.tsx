@@ -1,5 +1,6 @@
 import React from "react";
 import { Skill, DieType, Attributes } from "../types/character";
+import { skillDefinitions } from "../data/skills";
 
 interface Props {
   skills: Skill[];
@@ -8,14 +9,6 @@ interface Props {
 }
 
 const diceOptions: DieType[] = ["d4", "d6", "d8", "d10", "d12"];
-
-const availableSkills = [
-  "Athletics",
-  "Common Knowledge",
-  "Notice",
-  "Persusion",
-  "Stealth",
-];
 
 export default function SkillSelector({
   skills,
@@ -35,15 +28,31 @@ export default function SkillSelector({
 
   const updateSkill = (index: number, field: keyof Skill, value: string) => {
     const updatedSkills = [...skills];
-    updatedSkills[index] = {
-      ...updatedSkills[index],
-      [field]: value as any, // TypeScript leniency here
-    };
+
+    if (field === "name") {
+      const matched = skillDefinitions.find((s) => s.name === value);
+      updatedSkills[index] = {
+        ...updatedSkills[index],
+        name: value,
+        linkedAttribute: (matched?.linkedAttribute ??
+          "Smarts") as keyof Attributes, // fallback attribute
+      };
+    } else {
+      updatedSkills[index] = {
+        ...updatedSkills[index],
+        [field]: value as any,
+      };
+    }
+
     setSkills(updatedSkills);
   };
 
   const removeSkill = (index: number) => {
     setSkills(skills.filter((_, i) => i !== index));
+  };
+
+  const isPredefinedSkill = (name: string) => {
+    return skillDefinitions.some((skill) => skill.name === name);
   };
 
   return (
@@ -53,15 +62,24 @@ export default function SkillSelector({
 
       {skills.map((skill, index) => (
         <div key={index} style={{ marginTop: "1red" }}>
-          <input
-            type="text"
-            placeholder="Skill Name"
+          <select
             value={skill.name}
             onChange={(e) => updateSkill(index, "name", e.target.value)}
-          />
+          >
+            {skillDefinitions.map((skillDef) => (
+              <option key={skillDef.name} value={skillDef.name}>
+                {skillDef.name}
+              </option>
+            ))}
+          </select>
 
           <select
             value={skill.linkedAttribute}
+            disabled={isPredefinedSkill(skill.name)} // disable if predefined
+            style={{
+              opacity: isPredefinedSkill(skill.name) ? 0.5 : 1,
+              pointerEvents: isPredefinedSkill(skill.name) ? "none" : "auto",
+            }}
             onChange={(e) =>
               updateSkill(index, "linkedAttribute", e.target.value)
             }
