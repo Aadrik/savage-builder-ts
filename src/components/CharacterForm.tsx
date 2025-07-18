@@ -39,6 +39,7 @@ export default function CharacterForm({ character, setCharacter }: Props) {
         selectedEdges={character.edges || []}
         setSelectedEdges={(edges) => setCharacter({ ...character, edges })}
         edgePool={edges}
+        character={character}
       />
     </>
   );
