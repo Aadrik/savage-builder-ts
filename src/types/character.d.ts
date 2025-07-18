@@ -14,8 +14,24 @@ export interface Skill {
   die: DieType;
 }
 
+export interface SkillDefinition {
+  name: string;
+  linkedAttribute: keyof Attributes;
+}
+
+export interface EdgeDefinition {
+  name: string;
+  description: string;
+  prerequisites?: {
+    attributes?: Partial<Attributes>;
+    skills?: { name: string; die: DieType }[];
+    other?: string[]; // Hinderances, Rank, etc...
+  };
+}
+
 export interface Character {
   name: string;
   attributes: Attributes;
   skills: Skill[];
+  edges: EdgeDefinition[];
 }

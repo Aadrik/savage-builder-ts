@@ -17,6 +17,7 @@ function App() {
     name: "",
     attributes: defaultAttributes,
     skills: [],
+    edges: [],
   });
 
   return (

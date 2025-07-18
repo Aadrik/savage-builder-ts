@@ -2,6 +2,8 @@ import React from "react";
 import AttributeSelector from "./AttributeSelector";
 import SkillSelector from "./SkillSelector";
 import { Character } from "../types/character";
+import EdgeSelector from "./EdgeSelector";
+import { edges } from "../data/edges";
 
 interface Props {
   character: Character;
@@ -31,6 +33,12 @@ export default function CharacterForm({ character, setCharacter }: Props) {
         skills={character.skills}
         setSkills={(skills) => setCharacter({ ...character, skills })}
         attributes={character.attributes}
+      />
+
+      <EdgeSelector
+        selectedEdges={character.edges || []}
+        setSelectedEdges={(edges) => setCharacter({ ...character, edges })}
+        edgePool={edges}
       />
     </>
   );

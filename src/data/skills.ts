@@ -1,7 +1,36 @@
-export const skillDefinitions = [
+import { SkillDefinition } from "../types/character";
+
+export const skillDefinitions: SkillDefinition[] = [
+  { name: "Academics", linkedAttribute: "Smarts" },
   { name: "Athletics", linkedAttribute: "Agility" },
+  { name: "Battle", linkedAttribute: "Smarts" },
+  { name: "Boating", linkedAttribute: "Agility" },
   { name: "Common Knowledge", linkedAttribute: "Smarts" },
+  { name: "Driving", linkedAttribute: "Agility" },
+  { name: "Electronics", linkedAttribute: "Smarts" },
+  { name: "Faith", linkedAttribute: "Spirit" },
+  { name: "Fighting", linkedAttribute: "Agility" },
+  { name: "Focus", linkedAttribute: "Spirit" },
+  { name: "Gambling", linkedAttribute: "Smarts" },
+  { name: "Hacking", linkedAttribute: "Smarts" },
+  { name: "Healing", linkedAttribute: "Smarts" },
+  { name: "Intimidation", linkedAttribute: "Spirit" },
+  { name: "Language", linkedAttribute: "Smarts" }, // may use variant names like Language (Spanish)
   { name: "Notice", linkedAttribute: "Smarts" },
+  { name: "Occult", linkedAttribute: "Smarts" },
+  { name: "Performance", linkedAttribute: "Spirit" },
   { name: "Persuasion", linkedAttribute: "Spirit" },
+  { name: "Piloting", linkedAttribute: "Agility" },
+  { name: "Psionics", linkedAttribute: "Smarts" },
+  { name: "Repair", linkedAttribute: "Smarts" },
+  { name: "Research", linkedAttribute: "Smarts" },
+  { name: "Riding", linkedAttribute: "Agility" },
+  { name: "Science", linkedAttribute: "Smarts" },
+  { name: "Shooting", linkedAttribute: "Agility" },
+  { name: "Spellcasting", linkedAttribute: "Smarts" },
   { name: "Stealth", linkedAttribute: "Agility" },
+  { name: "Survival", linkedAttribute: "Smarts" },
+  { name: "Taunt", linkedAttribute: "Smarts" },
+  { name: "Thievery", linkedAttribute: "Agility" },
+  { name: "Weird Science", linkedAttribute: "Smarts" },
 ];
