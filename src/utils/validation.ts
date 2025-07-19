@@ -1,4 +1,5 @@
-import { Attributes, Character } from "../types/character";
+import { hindrances } from "../data/hindrances";
+import { Attributes, Character, HindranceDefinition } from "../types/character";
 import { EdgeDefinition } from "../types/character";
 
 export function validateEdge(
