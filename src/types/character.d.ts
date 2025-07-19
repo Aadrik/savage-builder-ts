@@ -40,8 +40,18 @@ export interface EdgeDefinition {
   };
 }
 
+export type HindranceCategory = "Minor" | "Major";
+
+export interface HindranceDefinition {
+  name: string;
+  description: string;
+  category: HindranceCategory;
+  tags?: string[]; // Optional: 'Physical', 'Social', etc...
+}
+
 export interface Character {
   name: string;
+  hindrances: HindranceDefinition[];
   attributes: Attributes;
   skills: Skill[];
   edges: EdgeDefinition[];

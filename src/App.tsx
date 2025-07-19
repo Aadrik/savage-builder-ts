@@ -15,6 +15,7 @@ const defaultAttributes: Attributes = {
 function App() {
   const [character, setCharacter] = useState<Character>({
     name: "",
+    hindrances: [],
     attributes: defaultAttributes,
     skills: [],
     edges: [],

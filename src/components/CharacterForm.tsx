@@ -1,9 +1,9 @@
-import React from "react";
+//import React from "react";
 import AttributeSelector from "./AttributeSelector";
 import SkillSelector from "./SkillSelector";
 import { Character } from "../types/character";
 import EdgeSelector from "./EdgeSelector";
-import { edges } from "../data/edges";
+import HindranceSelector from "./HindranceSelector";
 
 interface Props {
   character: Character;
@@ -22,6 +22,14 @@ export default function CharacterForm({ character, setCharacter }: Props) {
         />
       </div>
 
+      <HindranceSelector
+        selectedHindrances={character.hindrances || []}
+        setSelectedHindrances={(hindrances) =>
+          setCharacter({ ...character, hindrances })
+        }
+        character={character}
+      />
+
       <AttributeSelector
         attributes={character.attributes}
         setAttributes={(attrs) =>
@@ -38,7 +46,6 @@ export default function CharacterForm({ character, setCharacter }: Props) {
       <EdgeSelector
         selectedEdges={character.edges || []}
         setSelectedEdges={(edges) => setCharacter({ ...character, edges })}
-        edgePool={edges}
         character={character}
       />
     </>

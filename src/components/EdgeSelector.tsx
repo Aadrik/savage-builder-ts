@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Character, EdgeDefinition, EdgeCategory } from "../types/character";
 import { validateEdge } from "../utils/validation";
 import { edges } from "../data/edges";
@@ -6,7 +6,6 @@ import { edges } from "../data/edges";
 interface Props {
   selectedEdges: EdgeDefinition[];
   setSelectedEdges: (edge: EdgeDefinition[]) => void;
-  edgePool: EdgeDefinition[];
   character: Character;
 }
 
@@ -25,7 +24,6 @@ const edgeCategories: (EdgeCategory | "All")[] = [
 export default function EdgeSelector({
   selectedEdges,
   setSelectedEdges,
-  edgePool,
   character,
 }: Props) {
   const [categoryFilter, setCategoryFilter] = useState<EdgeCategory | "All">(
