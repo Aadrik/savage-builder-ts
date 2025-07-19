@@ -1,6 +1,7 @@
-import React from "react";
-import { Character, EdgeDefinition } from "../types/character";
+import React, { useState } from "react";
+import { Character, EdgeDefinition, EdgeCategory } from "../types/character";
 import { validateEdge } from "../utils/validation";
+import { edges } from "../data/edges";
 
 interface Props {
   selectedEdges: EdgeDefinition[];
@@ -9,12 +10,33 @@ interface Props {
   character: Character;
 }
 
+const edgeCategories: (EdgeCategory | "All")[] = [
+  "All",
+  "Background",
+  "Combat",
+  "Leadership",
+  "Legendary",
+  "Power",
+  "Professional",
+  "Social",
+  "Weird",
+];
+
 export default function EdgeSelector({
   selectedEdges,
   setSelectedEdges,
   edgePool,
   character,
 }: Props) {
+  const [categoryFilter, setCategoryFilter] = useState<EdgeCategory | "All">(
+    "All"
+  );
+
+  const filteredEdges =
+    categoryFilter === "All"
+      ? edges
+      : edges.filter((edge) => edge.category === categoryFilter);
+
   const toggleEdge = (edge: EdgeDefinition) => {
     const isSelected = selectedEdges.some((e) => e.name === edge.name);
     if (isSelected) {
@@ -24,14 +46,26 @@ export default function EdgeSelector({
     }
   };
 
-  // TODO: Make edges a drop down and filterable to avoid having a
-  // massive list always showing.
-
   return (
     <div>
       <h2>Edges</h2>
+
+      {/* Filter UI */}
+      <select
+        value={categoryFilter}
+        onChange={(e) =>
+          setCategoryFilter(e.target.value as EdgeCategory | "All")
+        }
+      >
+        {edgeCategories.map((category) => (
+          <option key={category} value={category}>
+            {category}
+          </option>
+        ))}
+      </select>
+
       <ul>
-        {edgePool.map((edge) => {
+        {filteredEdges.map((edge) => {
           const { isValid, reasons } = validateEdge(edge, character);
           return (
             <li key={edge.name} style={{ marginBottom: "1rem" }}>
