@@ -19,9 +19,20 @@ export interface SkillDefinition {
   linkedAttribute: keyof Attributes;
 }
 
+export type EdgeCategory =
+  | "Background"
+  | "Combat"
+  | "Social"
+  | "Leadership"
+  | "Power"
+  | "Professional"
+  | "Weird"
+  | "Legendary";
+
 export interface EdgeDefinition {
   name: string;
   description: string;
+  category: EdgeCategory;
   prerequisites?: {
     attributes?: Partial<Attributes>;
     skills?: { name: string; die: DieType }[];
