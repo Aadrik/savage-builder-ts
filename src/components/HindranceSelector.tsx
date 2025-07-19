@@ -29,9 +29,23 @@ export default function HindranceSelector({
     return matchCategory && matchTag;
   });
 
+  const toggleHindrance = (hindrance: HindranceDefinition) => {
+    const isSelected = selectedHindrances.some(
+      (e) => e.name === hindrance.name
+    );
+    if (isSelected) {
+      setSelectedHindrances(
+        selectedHindrances.filter((e) => e.name !== hindrance.name)
+      );
+    } else {
+      setSelectedHindrances([...selectedHindrances, hindrance]);
+    }
+  };
+
   return (
     <div>
       <h2>Hindrances</h2>
+      {/* Filter UI */}
       <select
         value={categoryFilter}
         onChange={(e) =>
@@ -55,6 +69,23 @@ export default function HindranceSelector({
           <li key={`${hindrance.name}-${hindrance.category}`}>
             <strong>{hindrance.name}</strong>({hindrance.category} -{" "}
             {hindrance.description})
+            <button
+              onClick={() => toggleHindrance(hindrance)}
+              style={{ marginTop: ".5rem" }}
+            >
+              {selectedHindrances.some((e) => e.name === hindrance.name)
+                ? "Remove"
+                : "Add"}
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <h3>Selected Hindrances</h3>
+      <ul>
+        {selectedHindrances.map((hindrance) => (
+          <li key={hindrance.name}>
+            <strong>{hindrance.name}</strong> {hindrance.description}
           </li>
         ))}
       </ul>
