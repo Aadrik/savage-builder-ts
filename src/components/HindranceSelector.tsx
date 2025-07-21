@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { hindrances } from "../data/hindrances";
 import {
   Character,
@@ -10,6 +10,8 @@ import {
   isValid,
   toggleHindrance,
 } from "../utils/hindrance";
+
+import styles from "./HindranceCard.module.css";
 
 interface Props {
   selectedHindrances: HindranceDefinition[];
@@ -67,30 +69,58 @@ export default function HindranceSelector({
       </div>
 
       {/* Hindrance Options */}
-      <ul>
-        {filteredHindrances.map((hindrance) => (
-          <li key={`${hindrance.name}-${hindrance.category}`}>
-            <strong>{hindrance.name}</strong>({hindrance.category} -{" "}
-            {hindrance.description})
-            <button
-              onClick={() => {
-                if (isValid(currentPoints, hindrance)) {
-                  toggleHindrance(
-                    hindrance,
-                    selectedHindrances,
-                    setSelectedHindrances
-                  );
-                }
-              }}
-              style={{ marginTop: ".5rem" }}
+      <div className={styles.cardGrid}>
+        {filteredHindrances.map((hindrance) => {
+          const isSelected = selectedHindrances.some(
+            (h) =>
+              h.name === hindrance.name && h.category === hindrance.category
+          );
+
+          const projectedPoints = calculateHindrancePoints([
+            ...selectedHindrances,
+            hindrance,
+          ]);
+
+          const isDisabled = !isSelected && projectedPoints > 4;
+
+          return (
+            <div
+              key={`${hindrance.name}-${hindrance.category}`}
+              className={`${styles.card} ${isSelected ? styles.selected : ""} ${
+                isDisabled ? styles.disabled : ""
+              }`}
             >
-              {selectedHindrances.some((e) => e.name === hindrance.name)
-                ? "Remove"
-                : "Add"}
-            </button>
-          </li>
-        ))}
-      </ul>
+              <h3>{hindrance.name}</h3>
+              <p>
+                <strong>Category:</strong> {hindrance.category}
+              </p>
+              <p>{hindrance.description}</p>
+              {hindrance.tags && (
+                <p>
+                  <strong>Tags:</strong> {hindrance.tags.join(", ")}
+                </p>
+              )}
+              <button
+                disabled={isDisabled}
+                onClick={() => {
+                  if (isValid(currentPoints, hindrance)) {
+                    toggleHindrance(
+                      hindrance,
+                      selectedHindrances,
+                      setSelectedHindrances
+                    );
+                  }
+                }}
+              >
+                {isSelected ? "Remove" : "Add"}
+              </button>
+              {isDisabled && (
+                <small className={styles.warning}>Exceeds 4-point limit</small>
+              )}
+            </div>
+          );
+        })}
+      </div>
 
       <h3>Selected Hindrances</h3>
       <ul>
