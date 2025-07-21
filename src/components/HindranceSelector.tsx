@@ -12,6 +12,7 @@ import {
 } from "../utils/hindrance";
 
 import styles from "./HindranceCard.module.css";
+import InfoCard from "./InfoCard";
 
 interface Props {
   selectedHindrances: HindranceDefinition[];
@@ -82,42 +83,27 @@ export default function HindranceSelector({
           ]);
 
           const isDisabled = !isSelected && projectedPoints > 4;
+          const handleToggle = () => {
+            if (isSelected || isValid(currentPoints, hindrance)) {
+              toggleHindrance(
+                hindrance,
+                selectedHindrances,
+                setSelectedHindrances
+              );
+            }
+          };
 
           return (
-            <div
+            <InfoCard
               key={`${hindrance.name}-${hindrance.category}`}
-              className={`${styles.card} ${isSelected ? styles.selected : ""} ${
-                isDisabled ? styles.disabled : ""
-              }`}
-            >
-              <h3>{hindrance.name}</h3>
-              <p>
-                <strong>Category:</strong> {hindrance.category}
-              </p>
-              <p>{hindrance.description}</p>
-              {hindrance.tags && (
-                <p>
-                  <strong>Tags:</strong> {hindrance.tags.join(", ")}
-                </p>
-              )}
-              <button
-                disabled={isDisabled}
-                onClick={() => {
-                  if (isValid(currentPoints, hindrance)) {
-                    toggleHindrance(
-                      hindrance,
-                      selectedHindrances,
-                      setSelectedHindrances
-                    );
-                  }
-                }}
-              >
-                {isSelected ? "Remove" : "Add"}
-              </button>
-              {isDisabled && (
-                <small className={styles.warning}>Exceeds 4-point limit</small>
-              )}
-            </div>
+              name={hindrance.name}
+              category={hindrance.category}
+              description={hindrance.description}
+              tags={hindrance.tags}
+              isSelected={isSelected}
+              isDisabled={isDisabled}
+              onToggle={handleToggle}
+            ></InfoCard>
           );
         })}
       </div>
