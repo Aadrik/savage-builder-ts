@@ -8,6 +8,7 @@ interface Props {
   tags?: string[];
   isSelected: boolean;
   isDisabled: boolean;
+  disabledMessage?: string;
   onToggle: () => void;
   addLabel?: string;
   removeLabel?: string;
@@ -21,6 +22,7 @@ export default function InfoCard({
   tags,
   isSelected,
   isDisabled,
+  disabledMessage = "Unavailable",
   onToggle,
   addLabel = "Add",
   removeLabel = "Remove",
@@ -52,7 +54,9 @@ export default function InfoCard({
         isDisabled={isDisabled}
         onToggle={onToggle}
       />
-      {isDisabled && <small className={styles.warning}>Unavailable</small>}
+      {isDisabled && (
+        <small className={styles.warning}>{disabledMessage}</small>
+      )}
     </div>
   );
 }

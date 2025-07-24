@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Character, EdgeDefinition, EdgeCategory } from "../types/character";
-import { validateEdge } from "../utils/validation";
+import { toggleEdge, validateEdge } from "../utils/validation";
 import { edges } from "../data/edges";
+import styles from "./EdgeSelector.module.css";
+import InfoCard from "./InfoCard";
 
 interface Props {
   selectedEdges: EdgeDefinition[];
@@ -35,68 +37,65 @@ export default function EdgeSelector({
       ? edges
       : edges.filter((edge) => edge.category === categoryFilter);
 
-  const toggleEdge = (edge: EdgeDefinition) => {
-    const isSelected = selectedEdges.some((e) => e.name === edge.name);
-    if (isSelected) {
-      setSelectedEdges(selectedEdges.filter((e) => e.name !== edge.name));
-    } else {
-      setSelectedEdges([...selectedEdges, edge]);
-    }
-  };
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
+  const toggleCollapse = () => setIsCollapsed((prev) => !prev);
 
   return (
     <div>
-      <h2>Edges</h2>
+      <h2 onClick={toggleCollapse} className={styles.header}>
+        Edges
+        <span className={styles.icon}>{isCollapsed ? "▶" : "▼"}</span>
+      </h2>
 
-      {/* Filter UI */}
-      <select
-        value={categoryFilter}
-        onChange={(e) =>
-          setCategoryFilter(e.target.value as EdgeCategory | "All")
-        }
-      >
-        {edgeCategories.map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
+      {!isCollapsed && (
+        <>
+          <select
+            value={categoryFilter}
+            onChange={(e) =>
+              setCategoryFilter(e.target.value as EdgeCategory | "All")
+            }
+          >
+            {edgeCategories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
 
-      <ul>
-        {filteredEdges.map((edge) => {
-          const { isValid, reasons } = validateEdge(edge, character);
-          return (
-            <li key={edge.name} style={{ marginBottom: "1rem" }}>
-              <strong>{edge.name}</strong>: {edge.description}
-              {!isValid && (
-                <ul style={{ color: "red", marginTop: "0.5rem" }}>
-                  {reasons.map((r, i) => (
-                    <li key={i}>{r}</li>
-                  ))}
-                </ul>
-              )}
-              <button
-                onClick={() => toggleEdge(edge)}
-                disabled={!isValid}
-                style={{ marginTop: "0.5rem" }}
-              >
-                {selectedEdges.some((e) => e.name === edge.name)
-                  ? "Remove"
-                  : "Add"}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+          <div className={styles.cardGrid}>
+            {filteredEdges.map((edge) => {
+              const { isValid, reasons } = validateEdge(edge, character);
+              const isSelected = selectedEdges.some(
+                (e) => e.name === edge.name
+              );
 
-      <h3>Selected Edges</h3>
-      <ul>
-        {selectedEdges.map((edge) => (
-          <li key={edge.name}>
-            <strong>{edge.name}</strong>: {edge.description}
-          </li>
-        ))}
-      </ul>
+              const handleToggle = () => {
+                toggleEdge(edge, selectedEdges, setSelectedEdges);
+              };
+              return (
+                <InfoCard
+                  key={edge.name}
+                  name={edge.name}
+                  description={edge.description}
+                  isSelected={isSelected}
+                  isDisabled={!isValid}
+                  disabledMessage={`Unavailable ${reasons.join(", ")}`}
+                  onToggle={handleToggle}
+                />
+              );
+            })}
+          </div>
+
+          <h3>Selected Edges</h3>
+          <ul>
+            {selectedEdges.map((edge) => (
+              <li key={edge.name}>
+                <strong>{edge.name}</strong>: {edge.description}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </div>
   );
 }

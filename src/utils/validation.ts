@@ -50,6 +50,19 @@ export function validateEdge(
   return { isValid, reasons };
 }
 
+export function toggleEdge(
+  edge: EdgeDefinition,
+  selectedEdges: EdgeDefinition[],
+  setSelectedEdges: (newEdges: EdgeDefinition[]) => void
+) {
+  const isSelected = selectedEdges.some((e) => e.name === edge.name);
+  if (isSelected) {
+    setSelectedEdges(selectedEdges.filter((e) => e.name !== edge.name));
+  } else {
+    setSelectedEdges([...selectedEdges, edge]);
+  }
+}
+
 export function dieRanking(die: string): number {
   const rankMap: { [key: string]: number } = {
     d4: 1,

@@ -15,3 +15,7 @@ export function toggleSkill(
     ]);
   }
 }
+
+// TODO: Add logic to check linked skill level and calculate
+// cost to add skill.
+// TODO: Add starter skills
