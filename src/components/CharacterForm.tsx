@@ -43,8 +43,8 @@ export default function CharacterForm({ character, setCharacter }: Props) {
       />
 
       <SkillSelector
-        skills={character.skills}
-        setSkills={(skills) => setCharacter({ ...character, skills })}
+        selectedSkills={character.skills}
+        setSelectedSkills={(skills) => setCharacter({ ...character, skills })}
         attributes={character.attributes}
       />
 

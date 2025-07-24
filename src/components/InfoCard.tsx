@@ -1,4 +1,5 @@
 import styles from "./InfoCard.module.css";
+import ToggleButton from "./ToggleButton";
 
 interface Props {
   name: string;
@@ -46,9 +47,11 @@ export default function InfoCard({
         </p>
       )}
       {extraFields}
-      <button disabled={isDisabled} onClick={onToggle}>
-        {isSelected ? removeLabel : addLabel}
-      </button>
+      <ToggleButton
+        isSelected={isSelected}
+        isDisabled={isDisabled}
+        onToggle={onToggle}
+      />
       {isDisabled && <small className={styles.warning}>Unavailable</small>}
     </div>
   );

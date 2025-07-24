@@ -17,6 +17,9 @@ export interface Skill {
 export interface SkillDefinition {
   name: string;
   linkedAttribute: keyof Attributes;
+  description?: string;
+  tags?: string[];
+  rank?: number;
 }
 
 export type EdgeCategory =
