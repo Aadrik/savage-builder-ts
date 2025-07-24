@@ -40,10 +40,15 @@ export default function SkillSelector({
               <InfoCard
                 key={skill.name}
                 name={skill.name}
-                description={`Linked to ${skill.linkedAttribute}`}
+                description={skill.description ?? ""}
                 isSelected={isSelected}
                 isDisabled={false}
                 onToggle={handleToggle}
+                extraFields={
+                  <>
+                    <p>Linked Attribute: {skill.linkedAttribute}</p>
+                  </>
+                }
               ></InfoCard>
             );
           })}

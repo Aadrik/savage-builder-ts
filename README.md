@@ -30,3 +30,9 @@ A modular React + TypeScript application for building tabletop RPG characters us
 npm install
 npm run dev   # or npm start
 ```
+
+## TODO:
+
+- Add a skill points. Characters should start with 12 points to spend.
+- Add hindrance points and allow the character to spend them on attributes, edges, skills or funds.
+- Add attribute points
