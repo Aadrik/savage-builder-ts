@@ -1,6 +1,6 @@
 import { SkillDefinition } from "../types/character";
 
-export const skillDefinitions: SkillDefinition[] = [
+export const skills: SkillDefinition[] = [
   { name: "Academics", linkedAttribute: "Smarts" },
   { name: "Athletics", linkedAttribute: "Agility" },
   { name: "Battle", linkedAttribute: "Smarts" },
