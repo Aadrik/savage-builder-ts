@@ -13,6 +13,7 @@ import {
 
 import styles from "./HindranceSelector.module.css";
 import InfoCard from "./InfoCard";
+import CollapsibleSection from "./CollapsibleSection";
 
 interface Props {
   selectedHindrances: HindranceDefinition[];
@@ -38,94 +39,84 @@ export default function HindranceSelector({
     return matchCategory && matchTag;
   });
 
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
-  const toggleCollapse = () => setIsCollapsed((prev) => !prev);
-
   return (
-    <div>
-      <h2 onClick={toggleCollapse} className={styles.header}>
-        Hindrances
-        <span className={styles.icon}>{isCollapsed ? "▶" : "▼"}</span>
-      </h2>
+    <CollapsibleSection title="Hindrances">
+      <div className={styles.panel}>
+        <p>
+          Selected Points: <strong>{currentPoints}</strong> / 4
+        </p>
+        {/* Filter UI */}
+        <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+          <select
+            value={categoryFilter}
+            onChange={(e) =>
+              setCategoryFilter(e.target.value as HindranceCategory | "All")
+            }
+          >
+            <option value="All">All</option>
+            <option value="Minor">Minor</option>
+            <option value="Major">Major</option>
+          </select>
 
-      {!isCollapsed && (
-        <div className={styles.panel}>
-          <p>
-            Selected Points: <strong>{currentPoints}</strong> / 4
-          </p>
-          {/* Filter UI */}
-          <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-            <select
-              value={categoryFilter}
-              onChange={(e) =>
-                setCategoryFilter(e.target.value as HindranceCategory | "All")
-              }
-            >
-              <option value="All">All</option>
-              <option value="Minor">Minor</option>
-              <option value="Major">Major</option>
-            </select>
-
-            <select
-              value={tagFilter}
-              onChange={(e) => setTagFilter(e.target.value)}
-            >
-              <option value="All">All</option>
-              <option value="Physical">Physical</option>
-              <option value="Mental">Mental</option>
-              <option value="Social">Social</option>
-            </select>
-          </div>
-
-          {/* Hindrance Options */}
-          <div className={styles.cardGrid}>
-            {filteredHindrances.map((hindrance) => {
-              const isSelected = selectedHindrances.some(
-                (h) =>
-                  h.name === hindrance.name && h.category === hindrance.category
-              );
-
-              const projectedPoints = calculateHindrancePoints([
-                ...selectedHindrances,
-                hindrance,
-              ]);
-
-              const isDisabled = !isSelected && projectedPoints > 4;
-              const handleToggle = () => {
-                if (isSelected || isValid(currentPoints, hindrance)) {
-                  toggleHindrance(
-                    hindrance,
-                    selectedHindrances,
-                    setSelectedHindrances
-                  );
-                }
-              };
-
-              return (
-                <InfoCard
-                  key={`${hindrance.name}-${hindrance.category}`}
-                  name={hindrance.name}
-                  category={hindrance.category}
-                  description={hindrance.description}
-                  tags={hindrance.tags}
-                  isSelected={isSelected}
-                  isDisabled={isDisabled}
-                  onToggle={handleToggle}
-                ></InfoCard>
-              );
-            })}
-          </div>
-
-          <h3>Selected Hindrances</h3>
-          <ul>
-            {selectedHindrances.map((hindrance) => (
-              <li key={hindrance.name}>
-                <strong>{hindrance.name}</strong> {hindrance.description}
-              </li>
-            ))}
-          </ul>
+          <select
+            value={tagFilter}
+            onChange={(e) => setTagFilter(e.target.value)}
+          >
+            <option value="All">All</option>
+            <option value="Physical">Physical</option>
+            <option value="Mental">Mental</option>
+            <option value="Social">Social</option>
+          </select>
         </div>
-      )}
-    </div>
+
+        {/* Hindrance Options */}
+        <div className={styles.cardGrid}>
+          {filteredHindrances.map((hindrance) => {
+            const isSelected = selectedHindrances.some(
+              (h) =>
+                h.name === hindrance.name && h.category === hindrance.category
+            );
+
+            const projectedPoints = calculateHindrancePoints([
+              ...selectedHindrances,
+              hindrance,
+            ]);
+
+            const isDisabled = !isSelected && projectedPoints > 4;
+            const handleToggle = () => {
+              if (isSelected || isValid(currentPoints, hindrance)) {
+                toggleHindrance(
+                  hindrance,
+                  selectedHindrances,
+                  setSelectedHindrances
+                );
+              }
+            };
+
+            return (
+              <InfoCard
+                key={`${hindrance.name}-${hindrance.category}`}
+                name={hindrance.name}
+                category={hindrance.category}
+                description={hindrance.description}
+                tags={hindrance.tags}
+                isSelected={isSelected}
+                isDisabled={isDisabled}
+                onToggle={handleToggle}
+              ></InfoCard>
+            );
+          })}
+        </div>
+
+        <h3>Selected Hindrances</h3>
+        <ul>
+          {selectedHindrances.map((hindrance) => (
+            <li key={hindrance.name}>
+              <strong>{hindrance.name}</strong> {hindrance.description}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </CollapsibleSection>
   );
 }

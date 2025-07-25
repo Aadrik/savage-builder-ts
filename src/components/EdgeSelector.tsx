@@ -4,6 +4,7 @@ import { toggleEdge, validateEdge } from "../utils/validation";
 import { edges } from "../data/edges";
 import styles from "./EdgeSelector.module.css";
 import InfoCard from "./InfoCard";
+import CollapsibleSection from "./CollapsibleSection";
 
 interface Props {
   selectedEdges: EdgeDefinition[];
@@ -37,65 +38,51 @@ export default function EdgeSelector({
       ? edges
       : edges.filter((edge) => edge.category === categoryFilter);
 
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
-  const toggleCollapse = () => setIsCollapsed((prev) => !prev);
-
   return (
-    <div>
-      <h2 onClick={toggleCollapse} className={styles.header}>
-        Edges
-        <span className={styles.icon}>{isCollapsed ? "▶" : "▼"}</span>
-      </h2>
+    <CollapsibleSection title="Edges">
+      <select
+        value={categoryFilter}
+        onChange={(e) =>
+          setCategoryFilter(e.target.value as EdgeCategory | "All")
+        }
+      >
+        {edgeCategories.map((category) => (
+          <option key={category} value={category}>
+            {category}
+          </option>
+        ))}
+      </select>
 
-      {!isCollapsed && (
-        <>
-          <select
-            value={categoryFilter}
-            onChange={(e) =>
-              setCategoryFilter(e.target.value as EdgeCategory | "All")
-            }
-          >
-            {edgeCategories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+      <div className={styles.cardGrid}>
+        {filteredEdges.map((edge) => {
+          const { isValid, reasons } = validateEdge(edge, character);
+          const isSelected = selectedEdges.some((e) => e.name === edge.name);
 
-          <div className={styles.cardGrid}>
-            {filteredEdges.map((edge) => {
-              const { isValid, reasons } = validateEdge(edge, character);
-              const isSelected = selectedEdges.some(
-                (e) => e.name === edge.name
-              );
+          const handleToggle = () => {
+            toggleEdge(edge, selectedEdges, setSelectedEdges);
+          };
+          return (
+            <InfoCard
+              key={edge.name}
+              name={edge.name}
+              description={edge.description}
+              isSelected={isSelected}
+              isDisabled={!isValid}
+              disabledMessage={`Unavailable ${reasons.join(", ")}`}
+              onToggle={handleToggle}
+            />
+          );
+        })}
+      </div>
 
-              const handleToggle = () => {
-                toggleEdge(edge, selectedEdges, setSelectedEdges);
-              };
-              return (
-                <InfoCard
-                  key={edge.name}
-                  name={edge.name}
-                  description={edge.description}
-                  isSelected={isSelected}
-                  isDisabled={!isValid}
-                  disabledMessage={`Unavailable ${reasons.join(", ")}`}
-                  onToggle={handleToggle}
-                />
-              );
-            })}
-          </div>
-
-          <h3>Selected Edges</h3>
-          <ul>
-            {selectedEdges.map((edge) => (
-              <li key={edge.name}>
-                <strong>{edge.name}</strong>: {edge.description}
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-    </div>
+      <h3>Selected Edges</h3>
+      <ul>
+        {selectedEdges.map((edge) => (
+          <li key={edge.name}>
+            <strong>{edge.name}</strong>: {edge.description}
+          </li>
+        ))}
+      </ul>
+    </CollapsibleSection>
   );
 }
