@@ -1,5 +1,5 @@
-import React from "react";
 import { Attributes, DieType } from "../types/character";
+import DieLevelSlider from "./DieLevelSlider";
 
 interface Props {
   attributes: Attributes;
@@ -15,27 +15,29 @@ export default function AttributeSelector({
   return (
     <div>
       <h2>Attributes</h2>
-      {Object.keys(attributes).map((attr) => (
-        <div key={attr}>
-          <label>{attr}:</label>
-          <select
-            value={attributes[attr as keyof Attributes]}
-            onChange={(e) => {
-              const undated = {
-                ...attributes,
-                [attr]: e.target.value as DieType,
-              };
-              setAttributes(undated);
-            }}
-          >
-            {diceOptions.map((die) => (
-              <option key={die} value={die}>
-                {die}
-              </option>
-            ))}
-          </select>
-        </div>
-      ))}
+      {Object.keys(attributes).map((attr) => {
+        const currentDie = attributes[attr as keyof Attributes];
+
+        return (
+          <div key={attr} style={{ marginBottom: "1.5rem" }}>
+            <label style={{ display: "block", marginBottom: "0.5rem" }}>
+              {attr}
+            </label>
+            <DieLevelSlider
+              currentDie={currentDie}
+              onChange={(newDie) => {
+                const updated = {
+                  ...attributes,
+                  [attr]: newDie,
+                };
+                setAttributes(updated);
+              }}
+              minDie="d4"
+              maxDie="d12"
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
