@@ -33,6 +33,8 @@ npm run dev   # or npm start
 
 ## TODO:
 
+- Integrate useCharacter to use the character object from App.tsx
+
 - Add a skill points. Characters should start with 12 points to spend.
 - Add hindrance points and allow the character to spend them on attributes, edges, skills or funds.
 - Add attribute points

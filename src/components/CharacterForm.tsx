@@ -28,7 +28,10 @@ export default function CharacterForm({ character, setCharacter }: Props) {
         </section>
       </div>
 
-      <CharacterSheet></CharacterSheet>
+      <CharacterSheet
+        character={character}
+        setCharacter={setCharacter}
+      ></CharacterSheet>
 
       <HindranceSelector
         selectedHindrances={character.hindrances || []}

@@ -58,4 +58,5 @@ export interface Character {
   attributes: Attributes;
   skills: Skill[];
   edges: EdgeDefinition[];
+  points: { attributePoints: number; skillPoints: number };
 }

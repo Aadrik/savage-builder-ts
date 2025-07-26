@@ -1,42 +1,28 @@
 import React from "react";
 import { useCharacter } from "../hooks/useCharacter";
+import { Attributes, Character } from "../types/character";
 
-export default function CharacterSheet() {
-  const {
-    attributes,
-    upgradeAttribute,
-    downgradeAttribute,
-    spendHindrancePoint,
-    pointsAvailable,
-  } = useCharacter(5); // You can set base points here
+interface Props {
+  character: Character;
+  setCharacter: (character: Character) => void;
+}
+
+export default function CharacterSheet({ character, setCharacter }: Props) {
+  const { updateAttribute, addSkill } = useCharacter(character, setCharacter);
 
   return (
     <div style={{ padding: "2rem", maxWidth: "500px", margin: "auto" }}>
       <h2>Character Attributes</h2>
-      <p>Points Remaining: {pointsAvailable}</p>
 
-      {Object.entries(attributes).map(([key, value]) => (
-        <div key={key} style={{ marginBottom: "1rem" }}>
-          <strong>{key}</strong>: {value}
-          <button
-            onClick={() => downgradeAttribute(key as keyof typeof attributes)}
-          >
-            -
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              upgradeAttribute(key as keyof typeof attributes);
-            }}
-          >
-            +
-          </button>
-        </div>
-      ))}
-
-      <div style={{ marginTop: "2rem" }}>
-        <button onClick={spendHindrancePoint}>Add Hindrance Bonus Point</button>
-      </div>
+      {Object.entries(character.attributes).map(([key, value]) => {
+        const typedKey = key as keyof Attributes;
+        return (
+          <div key={key} style={{ marginBottom: "1rem" }}>
+            <strong>{key}</strong>: {value}
+            <button onClick={() => updateAttribute(typedKey, -1)}>-</button>
+          </div>
+        );
+      })}
     </div>
   );
 }

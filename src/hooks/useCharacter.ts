@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Attributes, DieType } from "../types/character";
+import { Attributes, Character, DieType, Skill } from "../types/character";
 
 const dieOrder: DieType[] = ["d4", "d6", "d8", "d10", "d12"];
 
@@ -19,26 +19,82 @@ function getPreviousDie(current: DieType): DieType | null {
   return index > 0 ? dieOrder[index - 1] : null;
 }
 
-export function useCharacter(basePoints: number = 5) {
-  const [baseHindrancePoints] = useState(0); // Fixed starting pool
-  const [baseEdgePoints] = useState(0);
-  const [attributePoints, setAttributePoints] = useState(0); // Earned via hindrances or levels
-  const [pointsAvailable, setPointsAvailable] = useState(5);
+// function upgradeAttribute(attr: keyof Attributes): void {
+//   // Check to ensure not going past highest die, d12
+//   const nextDie = getNextDie(attributes[attr]);
+//   if (nextDie && attributePoints > 0) {
+//     setAttributes((currentAttributes) => {
+//       return { ...currentAttributes, [attr]: nextDie };
+//     });
+//     updatePointsAvailable(-1);
+//   }
+// }
 
-  const [attributes, setAttributes] = useState<Attributes>({
-    Agility: "d4",
-    Smarts: "d4",
-    Spirit: "d4",
-    Strength: "d4",
-    Vigor: "d4",
-  });
+// TODO: Add validation to only increase/decrease to max/min die value
+// Do I want to break this into two different functions one to increase
+// and one to decrease?
+export function useCharacter(character: Character, setCharacter: any) {
+  function updateAttributePoints(character: Character, step: number): void {
+    setCharacter((character: Character) => {
+      return {
+        ...character,
+        points: {
+          ...character.points,
+          attributePoints: character.points.attributePoints + step,
+        },
+      };
+    });
+  }
+
+  const updateAttribute = (key: keyof Attributes, value: number) => {
+    const nextDie = getNextDie(character.attributes[key]);
+    if (nextDie && character.points.attributePoints > 0) {
+      setCharacter((character: Character) => {
+        return {
+          ...character,
+          attributes: {
+            ...character.attributes,
+            [key]: nextDie,
+          },
+        };
+      });
+      updateAttributePoints(character, value);
+    }
+  };
+
+  const addSkill = (skill: Skill) => {
+    setCharacter((prev: any) => ({
+      ...prev,
+      skills: [...prev.skills, skill],
+    }));
+  };
+
+  return { updateAttribute, addSkill };
+}
+
+/*
+
+  const [skills, setSkills] = useState<Skill[]>([
+    { name: "Notice", linkedAttribute: "Smarts", die: "d4" },
+  ]);
 
   function spendHindrancePoint(): void {
     updatePointsAvailable(1);
   }
 
+  function calculateSkillCost(skill: keyof Skill): number {
+    console.log(skill);
+    return 0;
+  }
+
+  function upgradeSkill(skill: keyof Skill): void {
+    // Calculate cost to upgrade skill. This is based off of linked skill level
+    // Check if character has enough skill points to purchase
+    // Increase skill level by 1 and reduce skill points by 1
+  }
+
   function updatePointsAvailable(step: number): void {
-    setPointsAvailable((currentPoints) => {
+    setAttributePoints((currentPoints) => {
       return currentPoints + step;
     });
   }
@@ -46,7 +102,7 @@ export function useCharacter(basePoints: number = 5) {
   function upgradeAttribute(attr: keyof Attributes): void {
     // Check to ensure not going past highest die, d12
     const nextDie = getNextDie(attributes[attr]);
-    if (nextDie && pointsAvailable > 0) {
+    if (nextDie && attributePoints > 0) {
       setAttributes((currentAttributes) => {
         return { ...currentAttributes, [attr]: nextDie };
       });
@@ -67,9 +123,14 @@ export function useCharacter(basePoints: number = 5) {
 
   return {
     attributes,
-    pointsAvailable,
+    attributePoints,
     upgradeAttribute,
     downgradeAttribute,
     spendHindrancePoint,
+    skills,
+    setSkills,
+    calculateSkillCost,
   };
 }
+
+*/
