@@ -5,6 +5,7 @@ import { Character } from "../types/character";
 import EdgeSelector from "./EdgeSelector";
 import HindranceSelector from "./HindranceSelector";
 import { calculateHindrancePoints } from "../utils/hindrance";
+import CharacterSheet from "./CharacterSheet";
 
 interface Props {
   character: Character;
@@ -26,6 +27,8 @@ export default function CharacterForm({ character, setCharacter }: Props) {
           <h3>Hindrance Rewards ({hindrancePoints})</h3>
         </section>
       </div>
+
+      <CharacterSheet></CharacterSheet>
 
       <HindranceSelector
         selectedHindrances={character.hindrances || []}
