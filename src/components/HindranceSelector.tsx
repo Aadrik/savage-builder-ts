@@ -5,28 +5,23 @@ import {
   HindranceCategory,
   HindranceDefinition,
 } from "../types/character";
-import {
-  calculateHindrancePoints,
-  isValid,
-  toggleHindrance,
-} from "../utils/hindrance";
 
 import styles from "./HindranceSelector.module.css";
 import InfoCard from "./InfoCard";
 import CollapsibleSection from "./CollapsibleSection";
+import { useCharacter } from "../hooks/useCharacter";
 
 interface Props {
-  selectedHindrances: HindranceDefinition[];
-  setSelectedHindrances: (hinderance: HindranceDefinition[]) => void;
   character: Character;
+  setCharacter: (character: Character) => void;
 }
 
-export default function HindranceSelector({
-  selectedHindrances,
-  setSelectedHindrances,
-  character,
-}: Props) {
-  const currentPoints = calculateHindrancePoints(selectedHindrances);
+export default function HindranceSelector({ character, setCharacter }: Props) {
+  const selectedHindrances = character.hindrances;
+
+  const { addHindrance, hindrancePoints, removeHindrance, isValidHindrance } =
+    useCharacter(character, setCharacter);
+
   const [categoryFilter, setCategoryFilter] = useState<
     HindranceCategory | "All"
   >("All");
@@ -43,7 +38,7 @@ export default function HindranceSelector({
     <CollapsibleSection title="Hindrances">
       <div className={styles.panel}>
         <p>
-          Selected Points: <strong>{currentPoints}</strong> / 4
+          Selected Points: <strong>{hindrancePoints()}</strong> / 4
         </p>
         {/* Filter UI */}
         <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
@@ -72,24 +67,20 @@ export default function HindranceSelector({
         {/* Hindrance Options */}
         <div className={styles.cardGrid}>
           {filteredHindrances.map((hindrance) => {
-            const isSelected = selectedHindrances.some(
+            const isSelected = character.hindrances.some(
               (h) =>
                 h.name === hindrance.name && h.category === hindrance.category
             );
 
-            const projectedPoints = calculateHindrancePoints([
-              ...selectedHindrances,
-              hindrance,
-            ]);
+            // Disable button if hindrance would push character past
+            // four hindrance points
+            const isDisabled = !isSelected && !isValidHindrance(hindrance);
 
-            const isDisabled = !isSelected && projectedPoints > 4;
             const handleToggle = () => {
-              if (isSelected || isValid(currentPoints, hindrance)) {
-                toggleHindrance(
-                  hindrance,
-                  selectedHindrances,
-                  setSelectedHindrances
-                );
+              if (isSelected) {
+                removeHindrance(hindrance);
+              } else if (isValidHindrance(hindrance)) {
+                addHindrance(hindrance);
               }
             };
 

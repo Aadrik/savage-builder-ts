@@ -4,8 +4,8 @@ import SkillSelector from "./SkillSelector";
 import { Character } from "../types/character";
 import EdgeSelector from "./EdgeSelector";
 import HindranceSelector from "./HindranceSelector";
-import { calculateHindrancePoints } from "../utils/hindrance";
 import CharacterSheet from "./CharacterSheet";
+import { useCharacter } from "../hooks/useCharacter";
 
 interface Props {
   character: Character;
@@ -13,7 +13,11 @@ interface Props {
 }
 
 export default function CharacterForm({ character, setCharacter }: Props) {
-  const hindrancePoints = calculateHindrancePoints(character.hindrances);
+  const { addHindrance, hindrancePoints } = useCharacter(
+    character,
+    setCharacter
+  );
+
   return (
     <>
       <div>
@@ -24,22 +28,18 @@ export default function CharacterForm({ character, setCharacter }: Props) {
           onChange={(e) => setCharacter({ ...character, name: e.target.value })}
         />
         <section>
-          <h3>Hindrance Rewards ({hindrancePoints})</h3>
+          <h3>Hindrance Rewards ({hindrancePoints()})</h3>
         </section>
       </div>
 
+      {/*
       <CharacterSheet
         character={character}
         setCharacter={setCharacter}
       ></CharacterSheet>
+      */}
 
-      <HindranceSelector
-        selectedHindrances={character.hindrances || []}
-        setSelectedHindrances={(hindrances) =>
-          setCharacter({ ...character, hindrances })
-        }
-        character={character}
-      />
+      <HindranceSelector character={character} setCharacter={setCharacter} />
 
       <AttributeSelector
         attributes={character.attributes}

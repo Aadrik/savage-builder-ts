@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Attributes, Character, DieType, Skill } from "../types/character";
+import {
+  Attributes,
+  Character,
+  DieType,
+  HindranceDefinition,
+  Skill,
+} from "../types/character";
 
 const dieOrder: DieType[] = ["d4", "d6", "d8", "d10", "d12"];
 
@@ -18,17 +24,6 @@ function getPreviousDie(current: DieType): DieType | null {
   const index = dieOrder.indexOf(current);
   return index > 0 ? dieOrder[index - 1] : null;
 }
-
-// function upgradeAttribute(attr: keyof Attributes): void {
-//   // Check to ensure not going past highest die, d12
-//   const nextDie = getNextDie(attributes[attr]);
-//   if (nextDie && attributePoints > 0) {
-//     setAttributes((currentAttributes) => {
-//       return { ...currentAttributes, [attr]: nextDie };
-//     });
-//     updatePointsAvailable(-1);
-//   }
-// }
 
 // TODO: Add validation to only increase/decrease to max/min die value
 // Do I want to break this into two different functions one to increase
@@ -69,7 +64,54 @@ export function useCharacter(character: Character, setCharacter: any) {
     }));
   };
 
-  return { updateAttribute, addSkill };
+  // TODO: Add and remove hindrance does not update hindrance points
+  function addHindrance(hindrance: HindranceDefinition) {
+    setCharacter((character: Character) => {
+      return {
+        ...character,
+        hindrances: [...character.hindrances, hindrance],
+      };
+    });
+    // Add a hindrance point
+    const cost = hindrance.category === "Major" ? 2 : 1;
+    character.points.hindrancePoints += cost;
+  }
+
+  function removeHindrance(hindrance: HindranceDefinition) {
+    setCharacter((character: Character) => {
+      return {
+        ...character,
+        hindrances: character.hindrances.filter(
+          // Remove the hindrance that matches both name and category. Filter in
+          // every other hindrance
+          (h) => h.name !== hindrance.name || h.category !== hindrance.category
+        ),
+      };
+    });
+    // Remove a hindrance point
+    const cost = hindrance.category === "Major" ? 2 : 1;
+    character.points.hindrancePoints -= cost;
+  }
+
+  function isValidHindrance(hindrance: HindranceDefinition): boolean {
+    const newPoints =
+      character.points.hindrancePoints +
+      (hindrance.category === "Major" ? 2 : 1);
+    return newPoints <= 4 ? true : false;
+  }
+
+  function hindrancePoints(): number {
+    return character.points.hindrancePoints;
+  }
+
+  return {
+    updateAttribute,
+    addSkill,
+    addHindrance,
+    hindrancePoints,
+    removeHindrance,
+    isValidHindrance,
+  };
 }
 
 /*

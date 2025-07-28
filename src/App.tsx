@@ -22,6 +22,7 @@ const defaultSkills: Skill[] = [
 
 const skillPoints = 12;
 const attributePoints = 5;
+const hindrancePoints = 0;
 
 function App() {
   const [character, setCharacter] = useState<Character>({
@@ -30,7 +31,7 @@ function App() {
     attributes: defaultAttributes,
     skills: defaultSkills,
     edges: [],
-    points: { attributePoints, skillPoints },
+    points: { attributePoints, hindrancePoints, skillPoints },
   });
 
   return (
