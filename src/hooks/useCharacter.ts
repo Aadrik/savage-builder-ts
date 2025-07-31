@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Attributes,
   Character,
@@ -9,12 +8,6 @@ import {
 } from "../types/character";
 
 const dieOrder: DieType[] = ["d4", "d6", "d8", "d10", "d12"];
-
-// Returns how much it cost to get to a particular level
-// I.E. to get d8 would return 2.
-function calculateAttributeCost(die: DieType): number {
-  return dieOrder.indexOf(die);
-}
 
 function getNextDie(current: DieType): DieType | null {
   const index = dieOrder.indexOf(current);
@@ -41,7 +34,7 @@ function dieRanking(die: string): number {
 // Do I want to break this into two different functions one to increase
 // and one to decrease?
 export function useCharacter(character: Character, setCharacter: any) {
-  function updateAttributePoints(character: Character, step: number): void {
+  function updateAttributePoints(step: number): void {
     setCharacter((character: Character) => {
       return {
         ...character,
@@ -66,7 +59,7 @@ export function useCharacter(character: Character, setCharacter: any) {
         };
       });
       // Each increase of an attribute costs 1 point
-      updateAttributePoints(character, -1);
+      updateAttributePoints(-1);
     }
   }
 
@@ -83,8 +76,30 @@ export function useCharacter(character: Character, setCharacter: any) {
         };
       });
       // Each decrease of an attribute gains 1 point
-      updateAttributePoints(character, 1);
+      updateAttributePoints(1);
     }
+  }
+
+  function updateAttribute(attr: keyof Attributes, newDie: DieType) {
+    const currentLevel = character.attributes[attr];
+    const diff = dieRanking(newDie) - dieRanking(currentLevel);
+    // If diff is positive the die has gone up a level
+    if (canAffordAttribute(diff)) {
+      setCharacter((character: Character) => {
+        return {
+          ...character,
+          attributes: {
+            ...character.attributes,
+            [attr]: newDie,
+          },
+        };
+      });
+      updateAttributePoints(-diff);
+    }
+  }
+
+  function canAffordAttribute(requiredPoints: number): boolean {
+    return character.points.attributePoints - requiredPoints >= 0;
   }
 
   function addSkill(skill: SkillDefinition): void {
@@ -174,8 +189,7 @@ export function useCharacter(character: Character, setCharacter: any) {
   }
 
   return {
-    increaseAttribute,
-    decreaseAttribute,
+    updateAttribute,
     addSkill,
     removeSkill,
     addHindrance,
@@ -184,66 +198,3 @@ export function useCharacter(character: Character, setCharacter: any) {
     isValidHindrance,
   };
 }
-
-/*
-
-  const [skills, setSkills] = useState<Skill[]>([
-    { name: "Notice", linkedAttribute: "Smarts", die: "d4" },
-  ]);
-
-  function spendHindrancePoint(): void {
-    updatePointsAvailable(1);
-  }
-
-  function calculateSkillCost(skill: keyof Skill): number {
-    console.log(skill);
-    return 0;
-  }
-
-  function upgradeSkill(skill: keyof Skill): void {
-    // Calculate cost to upgrade skill. This is based off of linked skill level
-    // Check if character has enough skill points to purchase
-    // Increase skill level by 1 and reduce skill points by 1
-  }
-
-  function updatePointsAvailable(step: number): void {
-    setAttributePoints((currentPoints) => {
-      return currentPoints + step;
-    });
-  }
-
-  function upgradeAttribute(attr: keyof Attributes): void {
-    // Check to ensure not going past highest die, d12
-    const nextDie = getNextDie(attributes[attr]);
-    if (nextDie && attributePoints > 0) {
-      setAttributes((currentAttributes) => {
-        return { ...currentAttributes, [attr]: nextDie };
-      });
-      updatePointsAvailable(-1);
-    }
-  }
-
-  function downgradeAttribute(attr: keyof Attributes): void {
-    // Check to ensure not going lower than lowest die, d4
-    const prevDie = getPreviousDie(attributes[attr]);
-    if (prevDie) {
-      setAttributes((currentAttributes) => {
-        return { ...currentAttributes, [attr]: prevDie };
-      });
-      updatePointsAvailable(1);
-    }
-  }
-
-  return {
-    attributes,
-    attributePoints,
-    upgradeAttribute,
-    downgradeAttribute,
-    spendHindrancePoint,
-    skills,
-    setSkills,
-    calculateSkillCost,
-  };
-}
-
-*/

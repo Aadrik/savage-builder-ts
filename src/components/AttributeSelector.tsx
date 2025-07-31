@@ -1,7 +1,7 @@
 import { useCharacter } from "../hooks/useCharacter";
 import { Attributes, Character } from "../types/character";
 import CollapsibleSection from "./CollapsibleSection";
-import DieLevelSlider from "./DieLevelSlider";
+import DiePicker from "./DiePicker";
 
 interface Props {
   character: Character;
@@ -9,10 +9,7 @@ interface Props {
 }
 
 export default function AttributeSelector({ character, setCharacter }: Props) {
-  const { decreaseAttribute, increaseAttribute } = useCharacter(
-    character,
-    setCharacter
-  );
+  const { updateAttribute } = useCharacter(character, setCharacter);
   return (
     <CollapsibleSection title="Attributes">
       {Object.keys(character.attributes).map((attr) => {
@@ -20,8 +17,10 @@ export default function AttributeSelector({ character, setCharacter }: Props) {
         return (
           <div key={attr}>
             <strong>{attr}: </strong> {character.attributes[typedAttr]}
-            <button onClick={() => decreaseAttribute(typedAttr)}>-</button>
-            <button onClick={() => increaseAttribute(typedAttr)}>+</button>
+            <DiePicker
+              currentDie={character.attributes[typedAttr]}
+              onSelectDie={(newDie) => updateAttribute(typedAttr, newDie)}
+            />
           </div>
         );
       })}
