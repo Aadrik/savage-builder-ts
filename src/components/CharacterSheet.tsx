@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function CharacterSheet({ character, setCharacter }: Props) {
-  const { updateAttribute, addSkill } = useCharacter(character, setCharacter);
+  const { increaseAttribute } = useCharacter(character, setCharacter);
 
   return (
     <div style={{ padding: "2rem", maxWidth: "500px", margin: "auto" }}>
@@ -19,7 +19,7 @@ export default function CharacterSheet({ character, setCharacter }: Props) {
         return (
           <div key={key} style={{ marginBottom: "1rem" }}>
             <strong>{key}</strong>: {value}
-            <button onClick={() => updateAttribute(typedKey, -1)}>-</button>
+            <button onClick={() => increaseAttribute(typedKey)}>-</button>
           </div>
         );
       })}

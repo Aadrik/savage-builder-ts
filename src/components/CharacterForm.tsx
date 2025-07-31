@@ -41,12 +41,7 @@ export default function CharacterForm({ character, setCharacter }: Props) {
 
       <HindranceSelector character={character} setCharacter={setCharacter} />
 
-      <AttributeSelector
-        attributes={character.attributes}
-        setAttributes={(attrs) =>
-          setCharacter({ ...character, attributes: attrs })
-        }
-      />
+      <AttributeSelector character={character} setCharacter={setCharacter} />
 
       <SkillSelector character={character} setCharacter={setCharacter} />
 

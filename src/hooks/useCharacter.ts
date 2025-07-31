@@ -53,21 +53,39 @@ export function useCharacter(character: Character, setCharacter: any) {
     });
   }
 
-  const updateAttribute = (key: keyof Attributes, value: number) => {
-    const nextDie = getNextDie(character.attributes[key]);
+  function increaseAttribute(attr: keyof Attributes): void {
+    const nextDie = getNextDie(character.attributes[attr]);
     if (nextDie && character.points.attributePoints > 0) {
       setCharacter((character: Character) => {
         return {
           ...character,
           attributes: {
             ...character.attributes,
-            [key]: nextDie,
+            [attr]: nextDie,
           },
         };
       });
-      updateAttributePoints(character, value);
+      // Each increase of an attribute costs 1 point
+      updateAttributePoints(character, -1);
     }
-  };
+  }
+
+  function decreaseAttribute(attr: keyof Attributes): void {
+    const prevDie = getPreviousDie(character.attributes[attr]);
+    if (prevDie && character.points.attributePoints > 0) {
+      setCharacter((character: Character) => {
+        return {
+          ...character,
+          attributes: {
+            ...character.attributes,
+            [attr]: prevDie,
+          },
+        };
+      });
+      // Each decrease of an attribute gains 1 point
+      updateAttributePoints(character, 1);
+    }
+  }
 
   function addSkill(skill: SkillDefinition): void {
     const newSkill: Skill = { ...skill, die: "d4" };
@@ -156,7 +174,8 @@ export function useCharacter(character: Character, setCharacter: any) {
   }
 
   return {
-    updateAttribute,
+    increaseAttribute,
+    decreaseAttribute,
     addSkill,
     removeSkill,
     addHindrance,
