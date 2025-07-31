@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { hindrances } from "../data/hindrances";
-import {
-  Character,
-  HindranceCategory,
-  HindranceDefinition,
-} from "../types/character";
+import { Character, HindranceCategory } from "../types/character";
 
 import styles from "./HindranceSelector.module.css";
 import InfoCard from "./InfoCard";
