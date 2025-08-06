@@ -1,11 +1,10 @@
 //import React from "react";
 import AttributeSelector from "./AttributeSelector";
-import SkillSelector from "./SkillSelector";
-import { Character } from "../types/character";
-import EdgeSelector from "./EdgeSelector";
 import HindranceSelector from "./HindranceSelector";
-import CharacterSheet from "./CharacterSheet";
+import { Character } from "../types/character";
+
 import { useCharacter } from "../hooks/useCharacter";
+import SkillSelector from "./SkillSelector";
 
 interface Props {
   character: Character;
@@ -13,10 +12,7 @@ interface Props {
 }
 
 export default function CharacterForm({ character, setCharacter }: Props) {
-  const { addHindrance, hindrancePoints } = useCharacter(
-    character,
-    setCharacter
-  );
+  const { hindrancePoints } = useCharacter(character, setCharacter);
 
   return (
     <>
@@ -32,24 +28,11 @@ export default function CharacterForm({ character, setCharacter }: Props) {
         </section>
       </div>
 
-      {/*
-      <CharacterSheet
-        character={character}
-        setCharacter={setCharacter}
-      ></CharacterSheet>
-      */}
-
       <HindranceSelector character={character} setCharacter={setCharacter} />
 
       <AttributeSelector character={character} setCharacter={setCharacter} />
 
       <SkillSelector character={character} setCharacter={setCharacter} />
-
-      <EdgeSelector
-        selectedEdges={character.edges || []}
-        setSelectedEdges={(edges) => setCharacter({ ...character, edges })}
-        character={character}
-      />
     </>
   );
 }
