@@ -7,11 +7,15 @@ import {
   updateAttributeSVC,
   addSkillSVC,
   removeSkillSVC,
+  validateEdgeSVC,
+  addEdgeSVC,
+  removeEdgeSVC,
 } from "../services/characterService";
 import {
   Attributes,
   Character,
   DieType,
+  EdgeDefinition,
   HindranceDefinition,
   Skill,
   SkillDefinition,
@@ -54,14 +58,34 @@ export function useCharacter(
     setCharacter(updated);
   }
 
+  function validateEdge(edge: EdgeDefinition): {
+    isValid: boolean;
+    reasons: string[];
+  } {
+    return validateEdgeSVC(character, edge);
+  }
+
+  function addEdge(edge: EdgeDefinition): void {
+    const updated = addEdgeSVC(character, edge);
+    setCharacter(updated);
+  }
+
+  function removeEdge(edge: EdgeDefinition): void {
+    const updated = removeEdgeSVC(character, edge);
+    setCharacter(updated);
+  }
+
   return {
     character,
+    addEdge,
     addHindrance,
     addSkill,
-    removeSkill,
     hindrancePoints,
     isValidHindrance,
+    removeEdge,
+    removeSkill,
     removeHindrance,
     updateAttribute,
+    validateEdge,
   };
 }

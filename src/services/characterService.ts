@@ -2,6 +2,7 @@ import {
   Attributes,
   Character,
   DieType,
+  EdgeDefinition,
   HindranceDefinition,
   Skill,
   SkillDefinition,
@@ -167,4 +168,78 @@ export function isValidHindranceSVC(
 
 export function hindrancePointsSVC(character: Character): number {
   return character.points.hindrancePoints;
+}
+
+// -------------------- Edge -------------------- //
+export function validateEdgeSVC(
+  character: Character,
+  edge: EdgeDefinition
+): {
+  isValid: boolean;
+  reasons: string[];
+} {
+  const reasons: string[] = [];
+
+  // Check hindrance points to spend
+  if (character.points.hindrancePoints - 1 <= 0) {
+    reasons.push(`Requires 1 hindrance point.`);
+  }
+
+  // Check attribute prerequisites
+  if (edge.prerequisites?.attributes) {
+    for (const [key, requiredDie] of Object.entries(
+      edge.prerequisites.attributes
+    )) {
+      const currentDie = character.attributes[key as keyof Attributes];
+      if (!currentDie || dieRanking(currentDie) < dieRanking(requiredDie)) {
+        reasons.push(
+          `Requires ${key} to be at least ${requiredDie}, but is ${currentDie}.`
+        );
+      }
+    }
+  }
+
+  // Check skill prerequisites
+  if (edge.prerequisites?.skills) {
+    for (const skill of edge.prerequisites.skills) {
+      const characterSkill = character.skills.find(
+        (s) => s.name === skill.name
+      );
+      if (
+        !characterSkill ||
+        dieRanking(characterSkill.die) < dieRanking(skill.die)
+      ) {
+        reasons.push(
+          `Requires ${skill.name} to be at least ${skill.die}, but is ${
+            characterSkill?.die ?? "not present"
+          }.`
+        );
+      }
+    }
+  }
+
+  // TODO: Add other prerequisites checks (e.g., Hinderances, Rank)
+
+  const isValid = reasons.length === 0;
+  return { isValid, reasons };
+}
+
+export function addEdgeSVC(
+  character: Character,
+  edge: EdgeDefinition
+): Character {
+  return {
+    ...character,
+    edges: [...character.edges, edge],
+  };
+}
+
+export function removeEdgeSVC(
+  character: Character,
+  edge: EdgeDefinition
+): Character {
+  return {
+    ...character,
+    edges: character.edges.filter((e) => e.name !== edge.name),
+  };
 }

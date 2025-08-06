@@ -5,6 +5,7 @@ import { Character } from "../types/character";
 
 import { useCharacter } from "../hooks/useCharacter";
 import SkillSelector from "./SkillSelector";
+import EdgeSelector from "./EdgeSelector";
 
 interface Props {
   character: Character;
@@ -33,6 +34,8 @@ export default function CharacterForm({ character, setCharacter }: Props) {
       <AttributeSelector character={character} setCharacter={setCharacter} />
 
       <SkillSelector character={character} setCharacter={setCharacter} />
+
+      <EdgeSelector character={character} setCharacter={setCharacter} />
     </>
   );
 }
