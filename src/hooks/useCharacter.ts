@@ -10,6 +10,7 @@ import {
   validateEdgeSVC,
   addEdgeSVC,
   removeEdgeSVC,
+  hindrancePointsAwardedSVC,
 } from "../services/characterService";
 import {
   Attributes,
@@ -17,7 +18,6 @@ import {
   DieType,
   EdgeDefinition,
   HindranceDefinition,
-  Skill,
   SkillDefinition,
 } from "../types/character";
 
@@ -32,6 +32,10 @@ export function useCharacter(
 
   function hindrancePoints(): number {
     return hindrancePointsSVC(character);
+  }
+
+  function hindrancePointsAwarded(): number {
+    return hindrancePointsAwardedSVC(character);
   }
 
   function isValidHindrance(hindrance: HindranceDefinition): boolean {
@@ -81,6 +85,7 @@ export function useCharacter(
     addHindrance,
     addSkill,
     hindrancePoints,
+    hindrancePointsAwarded,
     isValidHindrance,
     removeEdge,
     removeSkill,

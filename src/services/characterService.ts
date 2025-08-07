@@ -162,12 +162,20 @@ export function isValidHindranceSVC(
   hindrance: HindranceDefinition
 ): boolean {
   const newPoints =
-    character.points.hindrancePoints + (hindrance.category === "Major" ? 2 : 1);
+    hindrancePointsAwardedSVC(character) +
+    (hindrance.category === "Major" ? 2 : 1);
   return newPoints <= 4 ? true : false;
 }
 
 export function hindrancePointsSVC(character: Character): number {
   return character.points.hindrancePoints;
+}
+
+export function hindrancePointsAwardedSVC(character: Character): number {
+  return character.hindrances.reduce((total, hindrance) => {
+    const points = hindrance.category === "Major" ? 2 : 1;
+    return total + points;
+  }, 0);
 }
 
 // -------------------- Edge -------------------- //
@@ -181,8 +189,8 @@ export function validateEdgeSVC(
   const reasons: string[] = [];
 
   // Check hindrance points to spend
-  if (character.points.hindrancePoints - 1 <= 0) {
-    reasons.push(`Requires 1 hindrance point.`);
+  if (character.points.hindrancePoints - 2 < 0) {
+    reasons.push(`Requires 2 hindrance point.`);
   }
 
   // Check attribute prerequisites
@@ -228,6 +236,7 @@ export function addEdgeSVC(
   character: Character,
   edge: EdgeDefinition
 ): Character {
+  character.points.hindrancePoints -= 2;
   return {
     ...character,
     edges: [...character.edges, edge],
@@ -238,6 +247,7 @@ export function removeEdgeSVC(
   character: Character,
   edge: EdgeDefinition
 ): Character {
+  character.points.hindrancePoints += 2;
   return {
     ...character,
     edges: character.edges.filter((e) => e.name !== edge.name),

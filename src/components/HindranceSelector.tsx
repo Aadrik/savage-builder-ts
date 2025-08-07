@@ -15,8 +15,12 @@ interface Props {
 export default function HindranceSelector({ character, setCharacter }: Props) {
   const selectedHindrances = character.hindrances;
 
-  const { addHindrance, hindrancePoints, removeHindrance, isValidHindrance } =
-    useCharacter(character, setCharacter);
+  const {
+    addHindrance,
+    hindrancePointsAwarded,
+    removeHindrance,
+    isValidHindrance,
+  } = useCharacter(character, setCharacter);
 
   const [categoryFilter, setCategoryFilter] = useState<
     HindranceCategory | "All"
@@ -34,7 +38,7 @@ export default function HindranceSelector({ character, setCharacter }: Props) {
     <CollapsibleSection title="Hindrances">
       <div className={styles.panel}>
         <p>
-          Selected Points: <strong>{hindrancePoints()}</strong> / 4
+          Selected Points: <strong>{hindrancePointsAwarded()}</strong> / 4
         </p>
         {/* Filter UI */}
         <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>

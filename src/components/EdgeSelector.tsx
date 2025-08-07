@@ -74,7 +74,7 @@ export default function EdgeSelector({ character, setCharacter }: Props) {
 
           // Disable button if character does not have enough
           // hindrance points to pay for edge
-          const isDisabled = !isSelected && reasons.length >= 0;
+          const isDisabled = !isSelected && !isValid;
 
           const handleToggle = () => {
             if (isSelected) {
